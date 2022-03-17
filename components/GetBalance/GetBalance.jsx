@@ -7,7 +7,7 @@ import styles from './GetBalance.module.css';
 import { Button } from '@mui/material';
 
 
-export const GetBalance: FC = () => {
+export const GetBalance = () => {
     const { connection } = useConnection();
     const { publicKey } = useWallet();
     const [checkAmount, setAmount] = useState(0);
