@@ -13,8 +13,9 @@
     sans-serif;
   min-height: 100vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
+  margin-top: 72px;
+  padding: 24px 48px;
 }
 
 .navbarPosition {

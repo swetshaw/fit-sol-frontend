@@ -9,7 +9,9 @@ require('@solana/wallet-adapter-react-ui/styles.css');
 import styles from '../styles/App.module.css';
 
 import { Context } from '../components/WalletConnection/WalletConnection';
-import {NavAppBar} from '../components/Navbar/Navbar';
+import { NavAppBar } from '../components/Navbar/Navbar';
+import { CreateChallengeNew } from '../components/CreateChallenge/CreateChallengeV1';
+import { ShowChallenges } from '../components/ShowChallenges/ShowChallenges';
 
 
 
@@ -17,16 +19,21 @@ import {NavAppBar} from '../components/Navbar/Navbar';
 export const App: FC = () => {
 
     return (
-        <div>
+        <div className="test-class">
             <Context>
                 <div className={styles.navbarPosition}>        {/* className='navbar-position' */}
-                    <NavAppBar  />
+                    <NavAppBar />
+
                 </div>
-    
+
             </Context>
             <div className={styles.baseAppText}>
-                <h1><strong>FITsol</strong></h1> 
+                {/* <h1><strong>FITsol</strong></h1> */}
+                <ShowChallenges /> 
             </div>
+            {/* <CreateChallengeNew/> */}
+            
+
         </div>
     );
 };

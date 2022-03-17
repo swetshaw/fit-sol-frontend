@@ -16,9 +16,9 @@ import idl from '../../utils/idl.json'
 
 // Get our program's id from the IDL file.
 const programID = new PublicKey('5eHD6sbs1auxr22YtJjDTnn9WRfvccfBLS5v8AbwpFNM');
+// const program = anchor.workspace.FitSol;
 
-
-import styles from './GetBalance.module.css';
+// import styles from './GetBalance.module.css';
 import { Button } from '@mui/material';
 
 const network = clusterApiUrl('devnet');
@@ -26,8 +26,12 @@ const opts = {
     preflightCommitment: "processed"
 }
 
-export const CreateChallenge: FC = () => {
+export const CreateChallengeNew = () => {
     const [open, setOpen] = React.useState(false);
+    const [challengeName, setChallengeName] = useState('')
+    const [days, setDays] = useState();
+    const [solAmount, setSolAmount] = useState();
+
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -37,7 +41,7 @@ export const CreateChallenge: FC = () => {
         setOpen(false);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
 
         setOpen(false)
     }
@@ -49,19 +53,37 @@ export const CreateChallenge: FC = () => {
         return provider;
     }
 
-    const createChallenge = () => {
+    const createChallenge = async () => {
         try {
             const provider = getProvider()
-            const program = new Program(idl: any, programID, provider)
+            const program = new Program(idl, programID, provider)
+            const [challenge, _nonce] = await anchor.web3.PublicKey.findProgramAddress(
+                [Buffer.from(anchor.utils.bytes.utf8.encode("challenge")), program.provider.wallet.publicKey.toBuffer()],
+                program.programId
+            );
+
+            console.log("CHALLENGE PDA", challenge.toString());
+            const tx = await program.rpc.createChallenge(challengeName, new anchor.BN(days), new anchor.BN(anchor.web3.LAMPORTS_PER_SOL * solAmount), {
+                accounts: {
+                    authority: program.provider.wallet.publicKey,
+                    systemProgram: anchor.web3.SystemProgram.programId,
+                    rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+                    challenge: challenge
+                }
+            });
+            console.log("Your transaction signature", tx);
+            setOpen(false)
         } catch (error) {
             console.log(error)
         }
     }
 
 
+
+
     return (
         <div>
-            <Button variant="outlined" onClick={handleClickOpen}>Create Challenge</Button>
+            <Button variant="text" onClick={handleClickOpen}><p style={{color: 'white'}}>Create Challenge</p></Button>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Challenge Details</DialogTitle>
                 <DialogContent>
@@ -76,6 +98,7 @@ export const CreateChallenge: FC = () => {
                         type="text"
                         fullWidth
                         variant="standard"
+                        onChange={(event) => setChallengeName(event.target.value)}
                     />
                     <TextField
                         autoFocus
@@ -85,6 +108,7 @@ export const CreateChallenge: FC = () => {
                         type="text"
                         fullWidth
                         variant="standard"
+                        onChange={(event) => setDays(event.target.value)}
                     />
                     <TextField
                         autoFocus
@@ -94,12 +118,13 @@ export const CreateChallenge: FC = () => {
                         type="number"
                         fullWidth
                         variant="standard"
+                        onChange={(event) => setSolAmount(event.target.value)}
                     />
 
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClose} variant='contained' >Create Challenge</Button>
+                    <Button onClick={createChallenge} variant='contained' >Create Challenge</Button>
                 </DialogActions>
             </Dialog>
         </div>
