@@ -10,6 +10,7 @@ import { GetBalance } from '../GetBalance/GetBalance';
 import { SendTransaction } from '../Transaction/transaction'
 import { Content } from '../WalletConnection/WalletConnection';
 import styles from './Navbar.module.css';
+import { CreateChallengeNew } from '../CreateChallenge/CreateChallengeV1';
 
 export const NavAppBar: FC = (props) => {
     return (
@@ -29,7 +30,8 @@ export const NavAppBar: FC = (props) => {
                             FITsol
                         </Typography>
                         <GetBalance />
-                        <SendTransaction />
+                        {/* <SendTransaction /> */}
+                        <CreateChallengeNew/>
                         <div className={styles.alignButtonTopRight}>
                             <Content />
                         </div>
