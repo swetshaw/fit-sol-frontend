@@ -31,6 +31,7 @@ export const CreateChallengeNew = () => {
     const [challengeName, setChallengeName] = useState('')
     const [days, setDays] = useState();
     const [solAmount, setSolAmount] = useState();
+    // const [allChallenges, setAllChallenges] = useState([])
 
 
     const handleClickOpen = () => {
@@ -53,23 +54,23 @@ export const CreateChallengeNew = () => {
         return provider;
     }
 
-    const getChallenges = async () => {
-        try {
-            const provider = getProvider()
-            const program = new Program(idl, programID, provider)
-            const [challenge, _nonce] = await anchor.web3.PublicKey.findProgramAddress(
-                [Buffer.from(anchor.utils.bytes.utf8.encode("challenge")), program.provider.wallet.publicKey.toBuffer()],
-                program.programId
-            );
+    // const getChallenges = async () => {
+    //     try {
+    //         const provider = getProvider()
+    //         const program = new Program(idl, programID, provider)
+    //         // const [challenge, _nonce] = await anchor.web3.PublicKey.findProgramAddress(
+    //         //     [Buffer.from(anchor.utils.bytes.utf8.encode("challenge")), program.provider.wallet.publicKey.toBuffer()],
+    //         //     program.programId
+    //         // );
 
-            console.log("CHALLENGE PDA", challenge.toString());
-            const challenges = await program.account.challenge.all()
-            setAllChallenges(challenges)
-            console.log("Challenges", challenges)
-        } catch (err) {
-            console.error(err)
-        }
-    }
+    //         // console.log("CHALLENGE PDA", challenge.toString());
+    //         const challenges = await program.account.challenge.all()
+    //         setAllChallenges(challenges)
+    //         console.log("Challenges", challenges)
+    //     } catch (err) {
+    //         console.error(err)
+    //     }
+    // }
 
     const createChallenge = async () => {
         try {
@@ -102,7 +103,7 @@ export const CreateChallengeNew = () => {
 
     return (
         <div>
-            <Button variant="text" onClick={handleClickOpen}><p style={{color: 'white'}}>Create Challenge</p></Button>
+            <Button variant="text" onClick={handleClickOpen}><p style={{ color: 'white' }}>Create Challenge</p></Button>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Challenge Details</DialogTitle>
                 <DialogContent>
