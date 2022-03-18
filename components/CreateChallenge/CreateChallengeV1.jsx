@@ -53,6 +53,24 @@ export const CreateChallengeNew = () => {
         return provider;
     }
 
+    const getChallenges = async () => {
+        try {
+            const provider = getProvider()
+            const program = new Program(idl, programID, provider)
+            const [challenge, _nonce] = await anchor.web3.PublicKey.findProgramAddress(
+                [Buffer.from(anchor.utils.bytes.utf8.encode("challenge")), program.provider.wallet.publicKey.toBuffer()],
+                program.programId
+            );
+
+            console.log("CHALLENGE PDA", challenge.toString());
+            const challenges = await program.account.challenge.all()
+            setAllChallenges(challenges)
+            console.log("Challenges", challenges)
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
     const createChallenge = async () => {
         try {
             const provider = getProvider()
@@ -73,6 +91,7 @@ export const CreateChallengeNew = () => {
             });
             console.log("Your transaction signature", tx);
             setOpen(false)
+            getChallenges()
         } catch (error) {
             console.log(error)
         }

@@ -26,6 +26,8 @@ const opts = {
 export const ShowChallenges = () => {
 
     const [allChallenges, setAllChallenges] = useState([])
+    const [challenge, setChallenge] = useState()
+
     const getProvider = () => {
         const connection = new Connection(network, opts.preflightCommitment);
         const provider = new Provider(connection, window.solana, opts.preflightCommitment,);
@@ -35,19 +37,21 @@ export const ShowChallenges = () => {
 
     const getChallenges = async () => {
         try {
+            console.log("Fetchinhg Challenges...")
             const provider = getProvider()
             const program = new Program(idl, programID, provider)
-            const [challenge, _nonce] = await anchor.web3.PublicKey.findProgramAddress(
-                [Buffer.from(anchor.utils.bytes.utf8.encode("challenge")), program.provider.wallet.publicKey.toBuffer()],
-                program.programId
-            );
+            // const [challenge, _nonce] = await anchor.web3.PublicKey.findProgramAddress(
+            //     [Buffer.from(anchor.utils.bytes.utf8.encode("challenge")), program.provider.wallet.publicKey.toBuffer()],
+            //     program.programId
+            // );
 
-            console.log("CHALLENGE PDA", challenge.toString());
+            // console.log("CHALLENGE PDA", challenge.toString());
             const challenges = await program.account.challenge.all()
             setAllChallenges(challenges)
             console.log("Challenges", challenges)
+            console.log("Fetch done !!")
         } catch (err) {
-            console.error(err)
+            console.error("Error in fetching", err)
         }
     }
 
@@ -77,11 +81,12 @@ export const ShowChallenges = () => {
             })
 
             console.log("Your transaction signature", tx);
-            getChallenges()
+
         } catch (error) {
             console.error(error)
         }
     }
+
 
     useEffect(() => {
 
@@ -111,7 +116,13 @@ export const ShowChallenges = () => {
                             <Typography variant="body2">
                                 Challenge description
                             </Typography>
-                            {challenge.account.participants.toNumber()}
+                            <Typography variant="subtitle1">
+                                {challenge.account.participants.toNumber()}
+                            </Typography>
+                            <Typography variant="subtitle1">
+                                {/* Created by: {challenge.account.authority.} */}
+                            </Typography>
+
                         </CardContent>
                         <CardActions>
                             <Button variant='contained' size="small" onClick={() => joinChallenge(challenge.account.maxAmount.toNumber())}>Join Now</Button>
