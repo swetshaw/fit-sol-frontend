@@ -113,12 +113,12 @@ export const ShowChallenges = () => {
                             <Typography sx={{ mb: 1.5 }} color="text.secondary">
                                 {challenge.account.maxAmount.toNumber() / LAMPORTS_PER_SOL} SOL
                             </Typography>
-                            <Typography variant="body2">
+                            {/* <Typography variant="body2">
                                 Challenge description
-                            </Typography>
-                            <Typography variant="subtitle1">
+                            </Typography> */}
+                            {/* <Typography variant="subtitle1">
                                 {challenge.account.participants.toNumber()}
-                            </Typography>
+                            </Typography> */}
                             <Typography variant="subtitle1">
                                 {/* Created by: {challenge.account.authority.} */}
                             </Typography>
