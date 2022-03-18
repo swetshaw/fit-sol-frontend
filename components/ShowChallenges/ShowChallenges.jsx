@@ -97,9 +97,19 @@ export const ShowChallenges = () => {
 
     return (
         <>
+               <Grid
+                container
+                spacing={2}
+                direction="row"
+                justify="flex-start"
+                alignItems="flex-start"
+            >
+            
             {allChallenges.length !== 0 ? allChallenges.map((challenge, index) => (
+                <Grid item xs={12} sm={6} md={3} key={index}>
                 <div key={index}>
-                    <Card sx={{ minWidth: 275 }}>
+               
+                    <Card variant="outlined" sx={{ minWidth: 200 }}>
                         <CardContent>
                             <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                                 Challenge #{index + 1}
@@ -128,10 +138,15 @@ export const ShowChallenges = () => {
                             <Button variant='contained' size="small" onClick={() => joinChallenge(challenge.account.maxAmount.toNumber())}>Join Now</Button>
                         </CardActions>
                     </Card>
+                    
                 </div>
+                </Grid>
+                
             ))
                 : 'loading'
             }
+            </Grid>
+                
         </>
     )
 }
