@@ -116,9 +116,9 @@ export const ShowChallenges = () => {
                             {/* <Typography variant="body2">
                                 Challenge description
                             </Typography> */}
-                            {/* <Typography variant="subtitle1">
-                                {challenge.account.participants.toNumber()}
-                            </Typography> */}
+                            <Typography variant="subtitle1">
+                                Participants {challenge.account.participants.toNumber()}
+                            </Typography>
                             <Typography variant="subtitle1">
                                 {/* Created by: {challenge.account.authority.} */}
                             </Typography>
