@@ -87,6 +87,32 @@ export const ShowChallenges = () => {
         }
     }
 
+    const endChallenge = async () => {
+        try {
+            const provider = getProvider()
+            const program = new Program(idl, programID, provider)
+            const [challenge, _nonce] = await anchor.web3.PublicKey.findProgramAddress(
+                [Buffer.from(anchor.utils.bytes.utf8.encode("challenge")), program.provider.wallet.publicKey.toBuffer()],
+                program.programId
+            );
+
+            const win = new anchor.web3.Keypair();
+            const tx = await program.rpc.endChallenge({
+                accounts: {
+                    challenge: challenge,
+                    creator: program.provider.wallet.publicKey,
+                    systemProgram: anchor.web3.SystemProgram.programId,
+                    winner: win.publicKey
+                }
+            })
+
+            console.log("Your transaction signature", tx);
+
+        } catch (error) {
+            console.error("Failed ending the challenge", error)
+        }
+    }
+
 
     useEffect(() => {
 
@@ -97,56 +123,57 @@ export const ShowChallenges = () => {
 
     return (
         <>
-               <Grid
+            <Grid
                 container
                 spacing={2}
                 direction="row"
                 justify="flex-start"
                 alignItems="flex-start"
             >
-            
-            {allChallenges.length !== 0 ? allChallenges.map((challenge, index) => (
-                <Grid item xs={12} sm={6} md={3} key={index}>
-                <div key={index}>
-               
-                    <Card variant="outlined" sx={{ minWidth: 200 }}>
-                        <CardContent>
-                            <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                Challenge #{index + 1}
-                            </Typography>
-                            <Typography variant="h5" component="div">
-                                {challenge.account.name}
-                            </Typography>
-                            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                {challenge.account.duration.toNumber()} days
-                            </Typography>
-                            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                {challenge.account.maxAmount.toNumber() / LAMPORTS_PER_SOL} SOL
-                            </Typography>
-                            {/* <Typography variant="body2">
+
+                {allChallenges.length !== 0 ? allChallenges.map((challenge, index) => (
+                    <Grid item xs={12} sm={6} md={3} key={index}>
+                        <div key={index}>
+
+                            <Card variant="outlined" sx={{ minWidth: 200 }}>
+                                <CardContent>
+                                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                        Challenge #{index + 1}
+                                    </Typography>
+                                    <Typography variant="h5" component="div">
+                                        {challenge.account.name}
+                                    </Typography>
+                                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                                        {challenge.account.duration.toNumber()} days
+                                    </Typography>
+                                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                                        {challenge.account.maxAmount.toNumber() / LAMPORTS_PER_SOL} SOL
+                                    </Typography>
+                                    {/* <Typography variant="body2">
                                 Challenge description
                             </Typography> */}
-                            <Typography variant="subtitle1">
-                                Participants {challenge.account.participants.toNumber()}
-                            </Typography>
-                            <Typography variant="subtitle1">
-                                {/* Created by: {challenge.account.authority.} */}
-                            </Typography>
+                                    <Typography variant="subtitle1">
+                                        Participants {challenge.account.participants.toNumber()}
+                                    </Typography>
+                                    <Typography variant="subtitle1">
+                                        {/* Created by: {challenge.account.authority.} */}
+                                    </Typography>
 
-                        </CardContent>
-                        <CardActions>
-                            <Button variant='contained' size="small" onClick={() => joinChallenge(challenge.account.maxAmount.toNumber())}>Join Now</Button>
-                        </CardActions>
-                    </Card>
-                    
-                </div>
-                </Grid>
-                
-            ))
-                : 'loading'
-            }
+                                </CardContent>
+                                <CardActions>
+                                    <Button variant='contained' size="small" onClick={() => joinChallenge(challenge.account.maxAmount.toNumber())}>Join Now</Button>
+                                    <Button variant='contained' size="small" onClick={() => endChallenge()}>End</Button>
+                                </CardActions>
+                            </Card>
+
+                        </div>
+                    </Grid>
+
+                ))
+                    : 'loading'
+                }
             </Grid>
-                
+
         </>
     )
 }
