@@ -102,7 +102,7 @@ export const ShowChallenges = () => {
                     challenge: challenge,
                     creator: program.provider.wallet.publicKey,
                     systemProgram: anchor.web3.SystemProgram.programId,
-                    winner: win.publicKey
+                    winner: program.provider.wallet.publicKey
                 }
             })
 

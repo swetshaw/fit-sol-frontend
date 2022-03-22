@@ -92,7 +92,7 @@ export const CreateChallengeNew = () => {
             });
             console.log("Your transaction signature", tx);
             setOpen(false)
-            getChallenges()
+            // getChallenges()
         } catch (error) {
             console.log(error)
         }
